@@ -242,6 +242,35 @@ PATH是最常见的一个环境变量，用户描述可执行程序的搜索路�
 
 + vi 后接文件名打开一个文件，按 i 进入输入模式，输入完成按ESC进入命令行模式，按：wq保存退出
 
+---
+
+## C/C++开发
+
+### 环境搭建
+
+#### 了解
+
++ GNU是一个自由的操作系统
++ GCC:GNU Compiler Collection(GNU 编译器集合)，它可以编译C、C++、JAV、Fortran、Pascal、Object-C、Ada等语言。
++ gcc是GCC中的GNU C Compiler（C 编译器）[15]
++ g++是GCC中的GNU C++ Compiler（C++编译器）
++ gdb是一个调试工具
++ makefile：一个工程中的源文件很多，它们之间的调用关系可能很复杂，makefile定义了一系列的规则来指定哪些文件需要先编译，哪些文件需要后编译，哪些文件需要重新编译，甚至于进行更复杂的功能操作，因为 makefile就像一个Shell脚本一样，也可以执行操作系统的命令。
++ CMake：CMake是用来生成makefile的一个工具，它读入所有源文件之后，自动生成makefile。
+
+#### 安装
+
++ `gcc --version`
++ `g++ --version`
++ `gdb --version`
++ `cmake --version`
+
+
+以上四条命令分别检查是否安装了gcc、g++、gdb、CMake，如果没有安装的话，根据提示安装即可。
+
+
+
+
 [^1]:稍微注意一下选择的是Linux系统，一般都是默认Linux。
 [^2]:每个物理CPU可以有一个或多个内核。
 [^3]:操作系统利用虚拟技术创造的逻辑CPU。
@@ -256,3 +285,4 @@ PATH是最常见的一个环境变量，用户描述可执行程序的搜索路�
 [^12]:此配置只对当前用户有效，因为每个用户都有自己的配置文件.bash_profile
 [^13]:不同的操作系统可能存放自定义脚本的位置不同，这里是CentOS下的情况
 [^14]:Windows里显示网络设备信息的命令为ipconfig，该虚拟机的母机的ip地址信息在VMware Network Adapter VMnet8一项中。
+[^15]:其实gcc和g++并不是编译器，它们只是一种驱动器，根据要编译的文件的类型调用对应的GNU编译器。
