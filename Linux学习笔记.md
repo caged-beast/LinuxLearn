@@ -241,6 +241,8 @@ PATH是最常见的一个环境变量，用户描述可执行程序的搜索路�
 #### vi 文本编辑
 
 + vi 后接文件名打开一个文件，按 i 进入输入模式，输入完成按ESC进入命令行模式，按：wq保存退出
++ 在命令行模式下按：set nu 可以显示行号
++ 如果按了 Ctrl + s 会将vi锁住，按 Ctrl + q 可以解锁。
 
 ---
 
@@ -254,7 +256,7 @@ PATH是最常见的一个环境变量，用户描述可执行程序的搜索路�
 + GCC:GNU Compiler Collection(GNU 编译器集合)，它可以编译C、C++、JAV、Fortran、Pascal、Object-C、Ada等语言。
 + gcc是GCC中的GNU C Compiler（C 编译器）[15]
 + g++是GCC中的GNU C++ Compiler（C++编译器）
-+ gdb是一个调试工具
++ gdb是一个用来调试C/C++的调试器
 + makefile：一个工程中的源文件很多，它们之间的调用关系可能很复杂，makefile定义了一系列的规则来指定哪些文件需要先编译，哪些文件需要后编译，哪些文件需要重新编译，甚至于进行更复杂的功能操作，因为 makefile就像一个Shell脚本一样，也可以执行操作系统的命令。
 + CMake：CMake是用来生成makefile的一个工具，它读入所有源文件之后，自动生成makefile。
 
@@ -265,11 +267,55 @@ PATH是最常见的一个环境变量，用户描述可执行程序的搜索路�
 + `gdb --version`
 + `cmake --version`
 
-
 以上四条命令分别检查是否安装了gcc、g++、gdb、CMake，如果没有安装的话，根据提示安装即可。
 
+#### 程序编译运行
 
++ 以CPP文件的编译运行为例，先编写CPP文件如test.cpp，然后用一条命令即可生成可执行文件`g++ test.cpp -o test`。要运行该程序输入`./test`，其中加 ./ 的原因是当前目录一般不在PATH目录中，直接写文件名会找不到该文件。
 
+刚刚这一条命令可以分为四个步骤：
+
+1. 预处理（Preprocessing）：`g++ -E test.cpp -o test.i`，-o 参数是把结果导入目标文件。这一步会对include中的头文件进行替换，并去掉注释
+2. 编译（Compiling）：`g++ -S test.i -o test.s`，这一步会对代码进行语法分析，生成汇编代码文件
+3. 汇编（Assembling）：`g++ -c test.s -o test.o`，这一步会把汇编代码转换成二进制文件
+4. 链接（Linking）：`g++ test.o -o test`，这一步会把库函数和test.o进行链接，生成最终的可执行文件
+
+#### g++重要编译参数
+
+1. -g 编译带调试信息的可执行文件（告诉GCC产生能被GNU调试器GDB使用的调试信息），如`g++ -g test.cpp -o test`
+2. -O[n] 优化源代码，一般使用`g++ -O2 test.cpp -o xxx.cpp`
+3. -l 后面紧接着库名，如`g++ -lglog test.cpp`意思就是链接glog库。注意这里可以链接的库是在/lib、/usr/lib、/usr/local/lib里面的，如果库文件不在这三个目录里，要用-L后紧接着库文件所在目录名的方式进行链接。
+4. -I 指定头文件搜索目录，/usr/include目录不用指定，gcc知道去哪里找，但是如果头文件不在/usr/include里就要用-I指定目录。如`g++ -I/myinclude test.cpp`就是指定去/myinclude找头文件。
+5. -Wall 打印警告信息，如`g++ -Wall test.cpp`
+6. -w 关闭警告信息，如`g++ -w test.cpp`
+7. -std=c++11 设置编译标准，如`g++ -std=c++11 test.cpp`
+8. -o 指定输出文件名，如`g++ test.cpp -o test`，这里如果不指定文件名会默认输出为a.out
+9. -D 定义宏，如`g++ -DDEBUG test.cpp`定义DEBUG宏，用-DDEBUG来选择开启或关闭DEBUG
+10. `man gcc` 查看gcc手册
+
+#### gdb常用调试命令参数
+
++ gdb 后接要调试的可执行文件名
++ 编译时要加上-g才能用gdb进行调试，如`gcc -g test.cpp -o test`
+
+1. help（h） 查看命令帮助，后面可以接具体命令
+2. run（r） 运行文件
+3. start 单步执行
+4. list（l） 查看源代码，list后接行号表示从第几行开始查看，list 后接函数名查看具体函数
+5. next（n） 逐过程调试
+6. step（s） 逐语句调试
+7. finish 结束当前函数，返回函数调用点
+8. info（i） 查看函数内部局部变量的值
+9. continue（c） 继续运行
+10. print（p） 后可以接变量名，打印值及地址
+11. quit（q） 退出gdb
+12. break num（b num） 在第num行设置断点
+13. info breakpoints（i b） 查看当前设置的所有断点
+14. delete breakpoints num（d b num） 删除第num个断点
+15. display 后可以接变量名，追踪查看具体变量值
+16. enable breakpoints 启用断点
+17. disable breakpoints 禁用断点
+18. 回车：重复上一命令
 
 [^1]:稍微注意一下选择的是Linux系统，一般都是默认Linux。
 [^2]:每个物理CPU可以有一个或多个内核。
